@@ -645,12 +645,37 @@
     document.getElementById('next-6').disabled = false;
   }
 
-  function submitSurvey() {
-    document.getElementById(`step-6`).classList.remove('active');
-    document.getElementById(`dot-6`).classList.remove('active');
-    document.getElementById(`dot-6`).classList.add('done');
-    document.getElementById('step-success').classList.add('active');
+  async function submitSurvey() {
+  const API = "https://sachapay-survey.onrender.com"; // replace with your Render URL
+
+  const data = {
+    orgType:          document.querySelector('input[name="q1"]:checked')?.value,
+    teamSize:         document.querySelector('input[name="q2"]:checked')?.value,
+    paymentMethod:    document.querySelector('input[name="q3"]:checked')?.value,
+    delayExperience:  document.querySelector('input[name="q4"]:checked')?.value,
+    willingToPay:     document.querySelector('input[name="q5"]:checked')?.value,
+    wantsWaitlist:    document.querySelector('input[name="q6"]:checked')?.value === "yes",
+    name:             document.getElementById('wl-name')?.value,
+    phone:            document.getElementById('wl-phone')?.value,
+    email:            document.getElementById('wl-email')?.value,
+  };
+
+  try {
+    await fetch(`${API}/api/survey/submit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(data)
+    });
+  } catch (err) {
+    console.error("Submit error:", err);
   }
+
+  // Show success screen regardless
+  document.getElementById('step-6').classList.remove('active');
+  document.getElementById('dot-6').classList.remove('active');
+  document.getElementById('dot-6').classList.add('done');
+  document.getElementById('step-success').classList.add('active');
+}
 
   function joinWaitlist() {
     const input = document.querySelector('.waitlist-input');
