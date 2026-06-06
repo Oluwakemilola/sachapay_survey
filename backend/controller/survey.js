@@ -34,7 +34,7 @@ export const submitSurvey = async (req, res) => {
       delayExperience,
       willingToPay,
       wantsWaitlist: wantsWaitlist === true || wantsWaitlist === "yes",
-      name:  wantsWaitlist ? name  : null,
+      name: wantsWaitlist ? name : null,
       phone: wantsWaitlist ? phone : null,
       email: wantsWaitlist ? email : null,
       source: source || "landing-page",
@@ -59,12 +59,11 @@ export const submitSurvey = async (req, res) => {
 // Admin only — requires auth
 export const getSurveyResponses = async (req, res) => {
   try {
-    const responses = await SurveyResponse.find()
-      .sort({ createdAt: -1 });
+    const responses = await SurveyResponse.find().sort({ createdAt: -1 });
 
     // Summary stats
     const total = responses.length;
-    const waitlistCount = responses.filter(r => r.wantsWaitlist).length;
+    const waitlistCount = responses.filter((r) => r.wantsWaitlist).length;
 
     // Willingness to pay breakdown
     const payBreakdown = responses.reduce((acc, r) => {
@@ -138,7 +137,7 @@ export const exportWaitlist = async (req, res) => {
       .sort({ createdAt: -1 });
 
     const headers = ["Name", "Phone", "Email", "Org Type", "Team Size", "Date"];
-    const rows = waitlist.map(w => [
+    const rows = waitlist.map((w) => [
       w.name || "",
       w.phone || "",
       w.email || "",
@@ -147,15 +146,50 @@ export const exportWaitlist = async (req, res) => {
       new Date(w.createdAt).toLocaleDateString("en-NG"),
     ]);
 
-    const csv = [headers, ...rows]
-      .map(row => row.join(","))
-      .join("\n");
+    const csv = [headers, ...rows].map((row) => row.join(",")).join("\n");
 
     res.setHeader("Content-Type", "text/csv");
-    res.setHeader("Content-Disposition", "attachment; filename=sachapay_waitlist.csv");
+    res.setHeader(
+      "Content-Disposition",
+      "attachment; filename=sachapay_waitlist.csv",
+    );
     return res.send(csv);
   } catch (error) {
     return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
+export const submitWaitlist = async (req, res) => {
+  try {
+    const { phone } = req.body;
+    if (!phone) {
+      res.status(400).json({
+        success: false,
+        message: "Phone number is required",
+      });
+      return;
+    }
+    const waitlist = await SurveyResponse.findOne({ phone });
+    if (waitlist) {
+      res.status(400).json({
+        success: false,
+        message: "Phone number already exists on the waitlist",
+      });
+      return;
+    }
+    const response = await SurveyResponse.create({
+      ...req.body,
+      wantsWaitlist: true,
+    });
+    res.status(201).json({
+      success: true,
+      message: "Thank you. Your response has been recorded.",
+    });
+  } catch (error) {
+    res.status(500).json({
       success: false,
       message: error.message,
     });

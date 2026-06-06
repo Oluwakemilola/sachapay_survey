@@ -1,691 +1,1244 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SachaPay — Smarter Payroll for Nigerian Businesses</title>
-<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --green: #0B3D2E;
-    --gold: #C9962A;
-    --cream: #F8F5ED;
-    --light: #F0F7F4;
-    --grey: #6B7B72;
-    --dark: #071F17;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'Outfit', sans-serif;
-    background: var(--cream);
-    color: var(--green);
-    overflow-x: hidden;
-  }
-
-  /* NAV */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    padding: 0 24px; height: 64px;
-    display: flex; align-items: center; justify-content: space-between;
-    background: rgba(248,245,237,0.96);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid rgba(11,61,46,0.08);
-  }
-  .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-  .logo-badge {
-    width: 34px; height: 34px; background: var(--gold);
-    border-radius: 8px; display: flex; align-items: center; justify-content: center;
-    font-size: 16px; font-weight: 800; color: white;
-  }
-  .logo-text { font-family: 'Outfit', sans-serif; font-size: 18px; font-weight: 700; color: var(--green); }
-  .logo-text span { color: var(--gold); }
-  .nav-btn {
-    padding: 9px 20px; background: var(--green); color: var(--cream);
-    border-radius: 10px; font-size: 14px; font-weight: 600;
-    text-decoration: none; border: none; cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-  }
-
-  /* HERO */
-  .hero {
-    min-height: 100vh; padding-top: 64px;
-    display: flex; align-items: center;
-    background: var(--green);
-    position: relative; overflow: hidden;
-  }
-  .hero::before {
-    content: ''; position: absolute;
-    top: -100px; right: -100px;
-    width: 500px; height: 500px;
-    background: rgba(201,150,42,0.08);
-    border-radius: 50%;
-  }
-  .hero::after {
-    content: ''; position: absolute;
-    bottom: -80px; right: 100px;
-    width: 300px; height: 300px;
-    background: rgba(201,150,42,0.05);
-    border-radius: 50%;
-  }
-  .hero-inner {
-    max-width: 720px; margin: 0 auto;
-    padding: 80px 24px;
-    text-align: center;
-    position: relative; z-index: 2;
-  }
-  .hero-badge {
-    display: inline-flex; align-items: center; gap: 8px;
-    padding: 6px 16px; background: rgba(201,150,42,0.2);
-    border-radius: 99px; font-size: 12px; font-weight: 700;
-    color: var(--gold); letter-spacing: 1px; text-transform: uppercase;
-    margin-bottom: 28px;
-  }
-  .hero h1 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(36px, 6vw, 58px);
-    line-height: 1.05; color: white; margin-bottom: 20px;
-  }
-  .hero h1 em { color: var(--gold); font-style: italic; }
-  .hero p {
-    font-size: clamp(15px, 2vw, 18px);
-    color: rgba(248,245,237,0.7);
-    line-height: 1.7; margin-bottom: 40px;
-    max-width: 520px; margin-left: auto; margin-right: auto;
-  }
-  .hero-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
-  .btn-primary {
-    padding: 14px 28px; background: var(--gold); color: white;
-    border-radius: 12px; font-size: 15px; font-weight: 700;
-    text-decoration: none; border: none; cursor: pointer;
-    font-family: 'Outfit', sans-serif; transition: transform 0.2s;
-  }
-  .btn-primary:hover { transform: translateY(-2px); }
-  .btn-outline {
-    padding: 14px 28px; background: transparent;
-    color: white; border-radius: 12px; font-size: 15px; font-weight: 600;
-    text-decoration: none; border: 2px solid rgba(255,255,255,0.3);
-    cursor: pointer; font-family: 'Outfit', sans-serif; transition: all 0.2s;
-  }
-  .btn-outline:hover { border-color: white; }
-
-  /* PROBLEM STRIP */
-  .problem-strip {
-    background: var(--dark);
-    padding: 20px 24px;
-    text-align: center;
-  }
-  .problem-strip p {
-    font-size: 14px; color: rgba(248,245,237,0.6);
-    max-width: 700px; margin: 0 auto;
-  }
-  .problem-strip strong { color: var(--gold); }
-
-  /* STATS */
-  .stats {
-    padding: 60px 24px;
-    background: var(--cream);
-  }
-  .stats-inner {
-    max-width: 900px; margin: 0 auto;
-    display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
-  }
-  .stat-card {
-    background: white; border-radius: 16px;
-    padding: 28px 24px; text-align: center;
-    border: 1px solid rgba(11,61,46,0.08);
-    box-shadow: 0 4px 20px rgba(11,61,46,0.06);
-  }
-  .stat-num {
-    font-family: 'DM Serif Display', serif;
-    font-size: 42px; color: var(--green); margin-bottom: 8px;
-  }
-  .stat-label { font-size: 13px; color: var(--grey); line-height: 1.5; }
-
-  /* SURVEY SECTION */
-  .survey-section {
-    padding: 80px 24px;
-    background: var(--light);
-  }
-  .survey-inner { max-width: 680px; margin: 0 auto; }
-  .section-tag {
-    display: inline-block; padding: 5px 14px;
-    background: rgba(201,150,42,0.15);
-    border-radius: 99px; font-size: 12px; font-weight: 700;
-    color: var(--gold); letter-spacing: 0.5px; text-transform: uppercase;
-    margin-bottom: 16px;
-  }
-  .survey-inner h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(28px, 4vw, 40px);
-    color: var(--green); margin-bottom: 12px; line-height: 1.15;
-  }
-  .survey-inner > p {
-    font-size: 15px; color: var(--grey);
-    line-height: 1.7; margin-bottom: 40px;
-  }
-
-  /* Form */
-  .survey-form {
-    background: white; border-radius: 20px;
-    padding: 36px; border: 1px solid rgba(11,61,46,0.08);
-    box-shadow: 0 8px 40px rgba(11,61,46,0.08);
-  }
-  .form-step { display: none; }
-  .form-step.active { display: block; }
-  .step-indicator {
-    display: flex; gap: 6px; margin-bottom: 28px;
-  }
-  .step-dot {
-    height: 4px; flex: 1; border-radius: 99px;
-    background: rgba(11,61,46,0.1);
-    transition: background 0.3s;
-  }
-  .step-dot.active { background: var(--gold); }
-  .step-dot.done { background: var(--green); }
-
-  .q-label {
-    font-size: 11px; font-weight: 700; color: var(--gold);
-    text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;
-  }
-  .q-text {
-    font-family: 'DM Serif Display', serif;
-    font-size: 20px; color: var(--green); margin-bottom: 20px; line-height: 1.3;
-  }
-
-  .options { display: flex; flex-direction: column; gap: 10px; }
-  .option {
-    display: flex; align-items: center; gap: 12px;
-    padding: 14px 16px; border-radius: 10px;
-    border: 1.5px solid rgba(11,61,46,0.12);
-    cursor: pointer; transition: all 0.15s;
-    font-size: 14px; color: var(--green); font-weight: 500;
-  }
-  .option:hover { border-color: var(--green); background: var(--light); }
-  .option.selected { border-color: var(--green); background: var(--light); }
-  .option input[type="radio"] { display: none; }
-  .option-circle {
-    width: 18px; height: 18px; border-radius: 50%;
-    border: 2px solid rgba(11,61,46,0.25);
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-  .option.selected .option-circle {
-    border-color: var(--green); background: var(--green);
-  }
-  .option.selected .option-circle::after {
-    content: ''; width: 6px; height: 6px;
-    background: white; border-radius: 50%;
-  }
-
-  .form-nav {
-    display: flex; justify-content: space-between;
-    align-items: center; margin-top: 28px;
-  }
-  .btn-next {
-    padding: 12px 28px; background: var(--green); color: white;
-    border-radius: 10px; font-size: 14px; font-weight: 600;
-    border: none; cursor: pointer; font-family: 'Outfit', sans-serif;
-    transition: transform 0.2s;
-  }
-  .btn-next:hover { transform: translateY(-1px); }
-  .btn-next:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-  .btn-back {
-    padding: 12px 20px; background: transparent; color: var(--grey);
-    border-radius: 10px; font-size: 14px; font-weight: 500;
-    border: 1px solid rgba(11,61,46,0.12); cursor: pointer;
-    font-family: 'Outfit', sans-serif;
-  }
-  .step-count { font-size: 12px; color: var(--grey); }
-
-  /* Waitlist form */
-  .waitlist-fields { display: flex; flex-direction: column; gap: 14px; }
-  .field-label {
-    font-size: 12px; font-weight: 600; color: var(--green);
-    margin-bottom: 6px; display: block;
-  }
-  .field-input {
-    width: 100%; padding: 12px 14px;
-    border: 1.5px solid rgba(11,61,46,0.15);
-    border-radius: 10px; font-size: 14px; color: var(--green);
-    font-family: 'Outfit', sans-serif; outline: none;
-    background: white; transition: border 0.2s;
-  }
-  .field-input:focus { border-color: var(--green); }
-
-  /* Success */
-  .success-state {
-    text-align: center; padding: 20px 0;
-  }
-  .success-icon {
-    width: 64px; height: 64px; background: #F0FDF4;
-    border-radius: 18px; display: flex; align-items: center;
-    justify-content: center; margin: 0 auto 20px;
-    font-size: 28px;
-  }
-  .success-state h3 {
-    font-family: 'DM Serif Display', serif;
-    font-size: 24px; color: var(--green); margin-bottom: 10px;
-  }
-  .success-state p { font-size: 14px; color: var(--grey); line-height: 1.7; }
-
-  /* WAITLIST SECTION */
-  .waitlist-section {
-    padding: 80px 24px;
-    background: var(--green);
-    text-align: center;
-  }
-  .waitlist-section h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(28px, 4vw, 42px);
-    color: white; margin-bottom: 12px;
-  }
-  .waitlist-section p {
-    font-size: 16px; color: rgba(248,245,237,0.65);
-    margin-bottom: 36px; max-width: 480px; margin-left: auto; margin-right: auto;
-  }
-  .waitlist-form-inline {
-    display: flex; gap: 10px; max-width: 480px;
-    margin: 0 auto; flex-wrap: wrap; justify-content: center;
-  }
-  .waitlist-input {
-    flex: 1; min-width: 220px; padding: 13px 16px;
-    border: none; border-radius: 10px; font-size: 14px;
-    font-family: 'Outfit', sans-serif; outline: none;
-    background: rgba(255,255,255,0.12); color: white;
-    border: 1px solid rgba(255,255,255,0.2);
-  }
-  .waitlist-input::placeholder { color: rgba(255,255,255,0.4); }
-  .waitlist-input:focus { border-color: var(--gold); }
-  .btn-waitlist {
-    padding: 13px 24px; background: var(--gold); color: white;
-    border-radius: 10px; font-size: 14px; font-weight: 700;
-    border: none; cursor: pointer; font-family: 'Outfit', sans-serif;
-    white-space: nowrap;
-  }
-
-  /* QUOTE */
-  .quote-section {
-    padding: 60px 24px;
-    background: var(--cream); text-align: center;
-  }
-  .quote-section blockquote {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(20px, 3vw, 28px);
-    color: var(--green); line-height: 1.5;
-    font-style: italic; max-width: 600px; margin: 0 auto 12px;
-  }
-  .quote-section cite { font-size: 13px; color: var(--grey); }
-
-  /* FOOTER */
-  footer {
-    background: var(--dark); padding: 24px;
-    text-align: center;
-  }
-  footer p { font-size: 12px; color: rgba(248,245,237,0.3); }
-
-  /* WHO */
-  .who-section { padding: 72px 24px; background: white; }
-  .who-inner { max-width: 900px; margin: 0 auto; }
-  .who-inner h2 {
-    font-family: 'DM Serif Display', serif;
-    font-size: clamp(26px, 4vw, 38px);
-    color: var(--green); text-align: center; margin-bottom: 8px;
-  }
-  .who-inner > p {
-    text-align: center; color: var(--grey); font-size: 15px;
-    margin-bottom: 40px;
-  }
-  .who-grid {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 16px;
-  }
-  .who-card {
-    background: var(--light); border-radius: 14px;
-    padding: 24px 16px; text-align: center;
-    border: 1px solid rgba(11,61,46,0.06);
-  }
-  .who-icon { font-size: 28px; margin-bottom: 10px; }
-  .who-name { font-size: 13px; font-weight: 600; color: var(--green); }
-
-  @media (max-width: 600px) {
-    .stats-inner { grid-template-columns: 1fr; }
-    .survey-form { padding: 24px; }
-  }
-</style>
-</head>
-<body>
-
-<!-- NAV -->
-<nav>
-  <a href="#" class="logo">
-    <div class="logo-badge">S</div>
-    <span class="logo-text">Sacha<span>Pay</span></span>
-  </a>
-  <a href="#waitlist" class="nav-btn">Join Waitlist</a>
-</nav>
-
-<!-- HERO -->
-<section class="hero">
-  <div class="hero-inner">
-    <div class="hero-badge">🇳🇬 Built for Nigerian Businesses</div>
-    <h1>Pay your team.<br><em>Not your sanity.</em></h1>
-    <p>Stop entering account numbers one by one. SachaPay automates bulk salary payments and gives every worker a verified Financial Passport — proof of income they own for life.</p>
-    <div class="hero-btns">
-      <a href="#survey" class="btn-primary">Take the 2-min Survey →</a>
-      <a href="#waitlist" class="btn-outline">Join the Waitlist</a>
-    </div>
-  </div>
-</section>
-
-<!-- PROBLEM STRIP -->
-<div class="problem-strip">
-  <p><strong>39M+</strong> Nigerian SMEs still paying workers manually &nbsp;•&nbsp; <strong>93%</strong> of workers have no verifiable income record &nbsp;•&nbsp; <strong>51%</strong> use spreadsheets for payroll</p>
-</div>
-
-<!-- STATS -->
-<section class="stats">
-  <div class="stats-inner">
-    <div class="stat-card">
-      <div class="stat-num">39M+</div>
-      <div class="stat-label">Nigerian SMEs paying workers manually every month</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">93%</div>
-      <div class="stat-label">of Nigerian workers have no verifiable income record</div>
-    </div>
-    <div class="stat-card">
-      <div class="stat-num">2 min</div>
-      <div class="stat-label">to register your organisation and run your first payroll</div>
-    </div>
-  </div>
-</section>
-
-<!-- WHO IS IT FOR -->
-<section class="who-section">
-  <div class="who-inner">
-    <h2>Who Is SachaPay For?</h2>
-    <p>Any organisation that pays people regularly — formal or informal</p>
-    <div class="who-grid">
-      <div class="who-card"><div class="who-icon">🏫</div><div class="who-name">Schools</div></div>
-      <div class="who-card"><div class="who-icon">⛪</div><div class="who-name">Churches & NGOs</div></div>
-      <div class="who-card"><div class="who-icon">🌾</div><div class="who-name">Farms</div></div>
-      <div class="who-card"><div class="who-icon">🚚</div><div class="who-name">Logistics</div></div>
-      <div class="who-card"><div class="who-icon">💇</div><div class="who-name">Salons & Shops</div></div>
-      <div class="who-card"><div class="who-icon">💻</div><div class="who-name">Tech Companies</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- SURVEY -->
-<section class="survey-section" id="survey">
-  <div class="survey-inner">
-    <div class="section-tag">2-Minute Survey</div>
-    <h2>Help us build the right product for you</h2>
-    <p>We are actively validating SachaPay with real Nigerian business owners. Your honest answers shape what we build. Takes 2 minutes — no email required unless you want early access.</p>
-
-    <div class="survey-form">
-      <div class="step-indicator">
-        <div class="step-dot active" id="dot-1"></div>
-        <div class="step-dot" id="dot-2"></div>
-        <div class="step-dot" id="dot-3"></div>
-        <div class="step-dot" id="dot-4"></div>
-        <div class="step-dot" id="dot-5"></div>
-        <div class="step-dot" id="dot-6"></div>
-      </div>
-
-      <!-- STEP 1 -->
-      <div class="form-step active" id="step-1">
-        <div class="q-label">Question 1 of 6</div>
-        <div class="q-text">What type of organisation do you run or manage?</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q1" value="school"><div class="option-circle"></div>School or educational institution</label>
-          <label class="option"><input type="radio" name="q1" value="church"><div class="option-circle"></div>Church, mosque, or religious organisation</label>
-          <label class="option"><input type="radio" name="q1" value="farm"><div class="option-circle"></div>Farm or agricultural business</label>
-          <label class="option"><input type="radio" name="q1" value="logistics"><div class="option-circle"></div>Logistics or transport</label>
-          <label class="option"><input type="radio" name="q1" value="shop"><div class="option-circle"></div>Shop, salon, or retail business</label>
-          <label class="option"><input type="radio" name="q1" value="ngo"><div class="option-circle"></div>NGO or community organisation</label>
-          <label class="option"><input type="radio" name="q1" value="other"><div class="option-circle"></div>Other</label>
-        </div>
-        <div class="form-nav">
-          <span class="step-count">1 of 6</span>
-          <button class="btn-next" onclick="nextStep(1)" id="next-1" disabled>Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 2 -->
-      <div class="form-step" id="step-2">
-        <div class="q-label">Question 2 of 6</div>
-        <div class="q-text">How many people do you currently pay salaries or stipends to?</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q2" value="1-5"><div class="option-circle"></div>1 to 5 people</label>
-          <label class="option"><input type="radio" name="q2" value="6-20"><div class="option-circle"></div>6 to 20 people</label>
-          <label class="option"><input type="radio" name="q2" value="21-50"><div class="option-circle"></div>21 to 50 people</label>
-          <label class="option"><input type="radio" name="q2" value="50+"><div class="option-circle"></div>More than 50 people</label>
-        </div>
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(2)">← Back</button>
-          <span class="step-count">2 of 6</span>
-          <button class="btn-next" onclick="nextStep(2)" id="next-2" disabled>Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 3 -->
-      <div class="form-step" id="step-3">
-        <div class="q-label">Question 3 of 6</div>
-        <div class="q-text">How do you currently pay your workers each month?</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q3" value="bank-manual"><div class="option-circle"></div>Bank transfer — I enter each account number manually</label>
-          <label class="option"><input type="radio" name="q3" value="cash"><div class="option-circle"></div>Cash payments</label>
-          <label class="option"><input type="radio" name="q3" value="opay"><div class="option-circle"></div>Opay, Moniepoint, or similar app</label>
-          <label class="option"><input type="radio" name="q3" value="platform"><div class="option-circle"></div>Already using a payroll platform</label>
-        </div>
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(3)">← Back</button>
-          <span class="step-count">3 of 6</span>
-          <button class="btn-next" onclick="nextStep(3)" id="next-3" disabled>Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 4 -->
-      <div class="form-step" id="step-4">
-        <div class="q-label">Question 4 of 6</div>
-        <div class="q-text">Have you or your workers ever experienced a delayed or forgotten payment?</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q4" value="many"><div class="option-circle"></div>Yes — it has happened more than once</label>
-          <label class="option"><input type="radio" name="q4" value="once"><div class="option-circle"></div>Yes — it happened once</label>
-          <label class="option"><input type="radio" name="q4" value="never"><div class="option-circle"></div>No, it has never happened</label>
-        </div>
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(4)">← Back</button>
-          <span class="step-count">4 of 6</span>
-          <button class="btn-next" onclick="nextStep(4)" id="next-4" disabled>Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 5 -->
-      <div class="form-step" id="step-5">
-        <div class="q-label">Question 5 of 6</div>
-        <div class="q-text">If SachaPay could pay all your workers in one click and give each worker a verified income certificate — what would you pay per month?</div>
-        <div class="options">
-          <label class="option"><input type="radio" name="q5" value="nothing"><div class="option-circle"></div>Nothing — I would not pay</label>
-          <label class="option"><input type="radio" name="q5" value="500-1000"><div class="option-circle"></div>₦500 to ₦1,000 per month</label>
-          <label class="option"><input type="radio" name="q5" value="1000-3000"><div class="option-circle"></div>₦1,000 to ₦3,000 per month</label>
-          <label class="option"><input type="radio" name="q5" value="3000-5000"><div class="option-circle"></div>₦3,000 to ₦5,000 per month</label>
-          <label class="option"><input type="radio" name="q5" value="5000+"><div class="option-circle"></div>More than ₦5,000 per month</label>
-        </div>
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(5)">← Back</button>
-          <span class="step-count">5 of 6</span>
-          <button class="btn-next" onclick="nextStep(5)" id="next-5" disabled>Next →</button>
-        </div>
-      </div>
-
-      <!-- STEP 6 — WAITLIST -->
-      <div class="form-step" id="step-6">
-        <div class="q-label">Question 6 of 6</div>
-        <div class="q-text">Would you like early access to SachaPay before full launch?</div>
-        <div class="options" style="margin-bottom: 20px;">
-          <label class="option" id="opt-yes" onclick="showWaitlistFields()"><input type="radio" name="q6" value="yes"><div class="option-circle"></div>Yes — add me to the waitlist</label>
-          <label class="option" id="opt-no" onclick="hideWaitlistFields()"><input type="radio" name="q6" value="no"><div class="option-circle"></div>No — just filling the survey</label>
-        </div>
-
-        <div id="waitlist-fields" class="waitlist-fields" style="display:none; margin-bottom: 20px;">
-          <div>
-            <label class="field-label">Full Name *</label>
-            <input type="text" class="field-input" id="wl-name" placeholder="Your full name">
-          </div>
-          <div>
-            <label class="field-label">WhatsApp / Phone Number *</label>
-            <input type="tel" class="field-input" id="wl-phone" placeholder="08012345678">
-          </div>
-          <div>
-            <label class="field-label">Email Address</label>
-            <input type="email" class="field-input" id="wl-email" placeholder="you@email.com">
-          </div>
-        </div>
-
-        <div class="form-nav">
-          <button class="btn-back" onclick="prevStep(6)">← Back</button>
-          <span class="step-count">6 of 6</span>
-          <button class="btn-next" onclick="submitSurvey()" id="next-6" disabled>Submit ✓</button>
-        </div>
-      </div>
-
-      <!-- SUCCESS -->
-      <div class="form-step" id="step-success">
-        <div class="success-state">
-          <div class="success-icon">🎉</div>
-          <h3>Thank you so much!</h3>
-          <p>Your response has been recorded. It will directly shape how SachaPay is built.<br><br>
-          If you joined the waitlist, you will be among the first to get access when we launch fully.</p>
-          <br>
-          <p style="font-size: 13px; color: var(--gold); font-weight: 600;">— Oluwakemi, Founder of SachaPay</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-</section>
-
-<!-- WAITLIST SECTION -->
-<section class="waitlist-section" id="waitlist">
-  <h2>Get Early Access to SachaPay</h2>
-  <p>Join the waitlist and be first to know when we launch fully. No spam — just one message when we are ready for you.</p>
-  <div class="waitlist-form-inline">
-    <input type="tel" class="waitlist-input" placeholder="Your WhatsApp number">
-    <button class="btn-waitlist" onclick="joinWaitlist()">Join Waitlist →</button>
-  </div>
-  <p style="font-size: 12px; margin-top: 16px; color: rgba(248,245,237,0.35);">Already 0 people on the waitlist. Be one of the first.</p>
-</section>
-
-<!-- QUOTE -->
-<section class="quote-section">
-  <blockquote>"The worker who can prove their income will always get the loan."</blockquote>
-  <cite>— The SachaPay Promise</cite>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <p>© 2026 SachaPay Technologies &nbsp;•&nbsp; Built for Nigerian SMEs &nbsp;•&nbsp; sasha-pay.vercel.app</p>
-</footer>
-
-<script>
-  let currentStep = 1;
-  const totalSteps = 6;
-
-  // Option selection
-  document.querySelectorAll('.option').forEach(option => {
-    option.addEventListener('click', function() {
-      const name = this.querySelector('input').name;
-      document.querySelectorAll(`input[name="${name}"]`).forEach(inp => {
-        inp.closest('.option').classList.remove('selected');
-      });
-      this.classList.add('selected');
-      this.querySelector('input').checked = true;
-
-      // Enable next button
-      const stepNum = currentStep;
-      const nextBtn = document.getElementById(`next-${stepNum}`);
-      if (nextBtn) nextBtn.disabled = false;
-
-      // Step 6 special
-      if (name === 'q6') {
-        document.getElementById('next-6').disabled = false;
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SachaPay — Smarter Payroll for Nigerian Businesses</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --green: #0b3d2e;
+        --gold: #c9962a;
+        --cream: #f8f5ed;
+        --light: #f0f7f4;
+        --grey: #6b7b72;
+        --dark: #071f17;
       }
-    });
-  });
 
-  function nextStep(from) {
-    document.getElementById(`step-${from}`).classList.remove('active');
-    document.getElementById(`dot-${from}`).classList.remove('active');
-    document.getElementById(`dot-${from}`).classList.add('done');
-    currentStep = from + 1;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    document.getElementById(`dot-${currentStep}`).classList.add('active');
-  }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  function prevStep(from) {
-    document.getElementById(`step-${from}`).classList.remove('active');
-    document.getElementById(`dot-${from}`).classList.remove('active');
-    currentStep = from - 1;
-    document.getElementById(`step-${currentStep}`).classList.add('active');
-    document.getElementById(`dot-${currentStep}`).classList.remove('done');
-    document.getElementById(`dot-${currentStep}`).classList.add('active');
-  }
+      body {
+        font-family: "Outfit", sans-serif;
+        background: var(--cream);
+        color: var(--green);
+        overflow-x: hidden;
+      }
 
-  function showWaitlistFields() {
-    document.getElementById('waitlist-fields').style.display = 'flex';
-    document.getElementById('next-6').disabled = false;
-  }
+      /* NAV */
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        padding: 0 24px;
+        height: 64px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: rgba(248, 245, 237, 0.96);
+        backdrop-filter: blur(12px);
+        border-bottom: 1px solid rgba(11, 61, 46, 0.08);
+      }
+      .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+      }
+      .logo-badge {
+        width: 34px;
+        height: 34px;
+        background: var(--gold);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 16px;
+        font-weight: 800;
+        color: white;
+      }
+      .logo-text {
+        font-family: "Outfit", sans-serif;
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--green);
+      }
+      .logo-text span {
+        color: var(--gold);
+      }
+      .nav-btn {
+        padding: 9px 20px;
+        background: var(--green);
+        color: var(--cream);
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+      }
 
-  function hideWaitlistFields() {
-    document.getElementById('waitlist-fields').style.display = 'none';
-    document.getElementById('next-6').disabled = false;
-  }
+      /* HERO */
+      .hero {
+        min-height: 100vh;
+        padding-top: 64px;
+        display: flex;
+        align-items: center;
+        background: var(--green);
+        position: relative;
+        overflow: hidden;
+      }
+      .hero::before {
+        content: "";
+        position: absolute;
+        top: -100px;
+        right: -100px;
+        width: 500px;
+        height: 500px;
+        background: rgba(201, 150, 42, 0.08);
+        border-radius: 50%;
+      }
+      .hero::after {
+        content: "";
+        position: absolute;
+        bottom: -80px;
+        right: 100px;
+        width: 300px;
+        height: 300px;
+        background: rgba(201, 150, 42, 0.05);
+        border-radius: 50%;
+      }
+      .hero-inner {
+        max-width: 720px;
+        margin: 0 auto;
+        padding: 80px 24px;
+        text-align: center;
+        position: relative;
+        z-index: 2;
+      }
+      .hero-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 16px;
+        background: rgba(201, 150, 42, 0.2);
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        margin-bottom: 28px;
+      }
+      .hero h1 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(36px, 6vw, 58px);
+        line-height: 1.05;
+        color: white;
+        margin-bottom: 20px;
+      }
+      .hero h1 em {
+        color: var(--gold);
+        font-style: italic;
+      }
+      .hero p {
+        font-size: clamp(15px, 2vw, 18px);
+        color: rgba(248, 245, 237, 0.7);
+        line-height: 1.7;
+        margin-bottom: 40px;
+        max-width: 520px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .hero-btns {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+        flex-wrap: wrap;
+      }
+      .btn-primary {
+        padding: 14px 28px;
+        background: var(--gold);
+        color: white;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        transition: transform 0.2s;
+      }
+      .btn-primary:hover {
+        transform: translateY(-2px);
+      }
+      .btn-outline {
+        padding: 14px 28px;
+        background: transparent;
+        color: white;
+        border-radius: 12px;
+        font-size: 15px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        transition: all 0.2s;
+      }
+      .btn-outline:hover {
+        border-color: white;
+      }
 
-  async function submitSurvey() {
-  const API = "https://sachapay-survey.onrender.com"; // replace with your Render URL
+      /* PROBLEM STRIP */
+      .problem-strip {
+        background: var(--dark);
+        padding: 20px 24px;
+        text-align: center;
+      }
+      .problem-strip p {
+        font-size: 14px;
+        color: rgba(248, 245, 237, 0.6);
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      .problem-strip strong {
+        color: var(--gold);
+      }
 
-  const data = {
-    orgType:          document.querySelector('input[name="q1"]:checked')?.value,
-    teamSize:         document.querySelector('input[name="q2"]:checked')?.value,
-    paymentMethod:    document.querySelector('input[name="q3"]:checked')?.value,
-    delayExperience:  document.querySelector('input[name="q4"]:checked')?.value,
-    willingToPay:     document.querySelector('input[name="q5"]:checked')?.value,
-    wantsWaitlist:    document.querySelector('input[name="q6"]:checked')?.value === "yes",
-    name:             document.getElementById('wl-name')?.value,
-    phone:            document.getElementById('wl-phone')?.value,
-    email:            document.getElementById('wl-email')?.value,
-  };
+      /* STATS */
+      .stats {
+        padding: 60px 24px;
+        background: var(--cream);
+      }
+      .stats-inner {
+        max-width: 1050px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 20px;
+      }
+      .stat-card {
+        background: white;
+        border-radius: 16px;
+        padding: 28px 24px;
+        text-align: center;
+        border: 1px solid rgba(11, 61, 46, 0.08);
+        box-shadow: 0 4px 20px rgba(11, 61, 46, 0.06);
+      }
+      .stat-num {
+        font-family: "DM Serif Display", serif;
+        font-size: 42px;
+        color: var(--green);
+        margin-bottom: 8px;
+      }
+      .stat-label {
+        font-size: 13px;
+        color: var(--grey);
+        line-height: 1.5;
+      }
 
-  try {
-    await fetch(`${API}/api/survey/submit`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data)
-    });
-  } catch (err) {
-    console.error("Submit error:", err);
-  }
+      /* SURVEY SECTION */
+      .survey-section {
+        padding: 80px 24px;
+        background: var(--light);
+      }
+      .survey-inner {
+        max-width: 680px;
+        margin: 0 auto;
+      }
+      .section-tag {
+        display: inline-block;
+        padding: 5px 14px;
+        background: rgba(201, 150, 42, 0.15);
+        border-radius: 99px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--gold);
+        letter-spacing: 0.5px;
+        text-transform: uppercase;
+        margin-bottom: 16px;
+      }
+      .survey-inner h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(28px, 4vw, 40px);
+        color: var(--green);
+        margin-bottom: 12px;
+        line-height: 1.15;
+      }
+      .survey-inner > p {
+        font-size: 15px;
+        color: var(--grey);
+        line-height: 1.7;
+        margin-bottom: 40px;
+      }
 
-  // Show success screen regardless
-  document.getElementById('step-6').classList.remove('active');
-  document.getElementById('dot-6').classList.remove('active');
-  document.getElementById('dot-6').classList.add('done');
-  document.getElementById('step-success').classList.add('active');
-}
+      /* Form */
+      .survey-form {
+        background: white;
+        border-radius: 20px;
+        padding: 36px;
+        border: 1px solid rgba(11, 61, 46, 0.08);
+        box-shadow: 0 8px 40px rgba(11, 61, 46, 0.08);
+      }
+      .form-step {
+        display: none;
+      }
+      .form-step.active {
+        display: block;
+      }
+      .step-indicator {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 28px;
+      }
+      .step-dot {
+        height: 4px;
+        flex: 1;
+        border-radius: 99px;
+        background: rgba(11, 61, 46, 0.1);
+        transition: background 0.3s;
+      }
+      .step-dot.active {
+        background: var(--gold);
+      }
+      .step-dot.done {
+        background: var(--green);
+      }
 
-  function joinWaitlist() {
-    const input = document.querySelector('.waitlist-input');
-    if (input.value.length > 7) {
-      input.value = '';
-      input.placeholder = '✓ You are on the list!';
-      input.style.borderColor = '#059669';
-      input.style.color = '#059669';
-    }
-  }
-</script>
-</body>
+      .q-label {
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--gold);
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+      .q-text {
+        font-family: "DM Serif Display", serif;
+        font-size: 20px;
+        color: var(--green);
+        margin-bottom: 20px;
+        line-height: 1.3;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+      .option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 10px;
+        border: 1.5px solid rgba(11, 61, 46, 0.12);
+        cursor: pointer;
+        transition: all 0.15s;
+        font-size: 14px;
+        color: var(--green);
+        font-weight: 500;
+      }
+      .option:hover {
+        border-color: var(--green);
+        background: var(--light);
+      }
+      .option.selected {
+        border-color: var(--green);
+        background: var(--light);
+      }
+      .option input[type="radio"] {
+        display: none;
+      }
+      .option-circle {
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid rgba(11, 61, 46, 0.25);
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.15s;
+      }
+      .option.selected .option-circle {
+        border-color: var(--green);
+        background: var(--green);
+      }
+      .option.selected .option-circle::after {
+        content: "";
+        width: 6px;
+        height: 6px;
+        background: white;
+        border-radius: 50%;
+      }
+
+      .form-nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 28px;
+      }
+      .btn-next {
+        padding: 12px 28px;
+        background: var(--green);
+        color: white;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        transition: transform 0.2s;
+      }
+      .btn-next:hover {
+        transform: translateY(-1px);
+      }
+      .btn-next:disabled {
+        opacity: 0.4;
+        cursor: not-allowed;
+        transform: none;
+      }
+      .btn-back {
+        padding: 12px 20px;
+        background: transparent;
+        color: var(--grey);
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        border: 1px solid rgba(11, 61, 46, 0.12);
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+      }
+      .step-count {
+        font-size: 12px;
+        color: var(--grey);
+      }
+
+      /* Waitlist form */
+      .waitlist-fields {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+      }
+      .field-label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green);
+        margin-bottom: 6px;
+        display: block;
+      }
+      .field-input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid rgba(11, 61, 46, 0.15);
+        border-radius: 10px;
+        font-size: 14px;
+        color: var(--green);
+        font-family: "Outfit", sans-serif;
+        outline: none;
+        background: white;
+        transition: border 0.2s;
+      }
+      .field-input:focus {
+        border-color: var(--green);
+      }
+
+      /* Success */
+      .success-state {
+        text-align: center;
+        padding: 20px 0;
+      }
+      .success-icon {
+        width: 64px;
+        height: 64px;
+        background: #f0fdf4;
+        border-radius: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        font-size: 28px;
+      }
+      .success-state h3 {
+        font-family: "DM Serif Display", serif;
+        font-size: 24px;
+        color: var(--green);
+        margin-bottom: 10px;
+      }
+      .success-state p {
+        font-size: 14px;
+        color: var(--grey);
+        line-height: 1.7;
+      }
+
+      /* WAITLIST SECTION */
+      .waitlist-section {
+        padding: 80px 24px;
+        background: var(--green);
+        text-align: center;
+      }
+      .waitlist-section h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(28px, 4vw, 42px);
+        color: white;
+        margin-bottom: 12px;
+      }
+      .waitlist-section p {
+        font-size: 16px;
+        color: rgba(248, 245, 237, 0.65);
+        margin-bottom: 36px;
+        max-width: 480px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .waitlist-form-inline {
+        display: flex;
+        gap: 10px;
+        max-width: 480px;
+        margin: 0 auto;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .waitlist-input {
+        flex: 1;
+        min-width: 220px;
+        padding: 13px 16px;
+        border: none;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: "Outfit", sans-serif;
+        outline: none;
+        background: rgba(255, 255, 255, 0.12);
+        color: white;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      .waitlist-input::placeholder {
+        color: rgba(255, 255, 255, 0.4);
+      }
+      .waitlist-input:focus {
+        border-color: var(--gold);
+      }
+      .btn-waitlist {
+        padding: 13px 24px;
+        background: var(--gold);
+        color: white;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 700;
+        border: none;
+        cursor: pointer;
+        font-family: "Outfit", sans-serif;
+        white-space: nowrap;
+      }
+
+      /* QUOTE */
+      .quote-section {
+        padding: 60px 24px;
+        background: var(--cream);
+        text-align: center;
+      }
+      .quote-section blockquote {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(20px, 3vw, 28px);
+        color: var(--green);
+        line-height: 1.5;
+        font-style: italic;
+        max-width: 600px;
+        margin: 0 auto 12px;
+      }
+      .quote-section cite {
+        font-size: 13px;
+        color: var(--grey);
+      }
+
+      /* FOOTER */
+      footer {
+        background: var(--dark);
+        padding: 24px;
+        text-align: center;
+      }
+      footer p {
+        font-size: 12px;
+        color: rgba(248, 245, 237, 0.3);
+      }
+
+      /* WHO */
+      .who-section {
+        padding: 72px 24px;
+        background: white;
+      }
+      .who-inner {
+        max-width: 900px;
+        margin: 0 auto;
+      }
+      .who-inner h2 {
+        font-family: "DM Serif Display", serif;
+        font-size: clamp(26px, 4vw, 38px);
+        color: var(--green);
+        text-align: center;
+        margin-bottom: 8px;
+      }
+      .who-inner > p {
+        text-align: center;
+        color: var(--grey);
+        font-size: 15px;
+        margin-bottom: 40px;
+      }
+      .who-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 16px;
+      }
+      .who-card {
+        background: var(--light);
+        border-radius: 14px;
+        padding: 24px 16px;
+        text-align: center;
+        border: 1px solid rgba(11, 61, 46, 0.06);
+      }
+      .who-icon {
+        font-size: 28px;
+        margin-bottom: 10px;
+      }
+      .who-name {
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--green);
+      }
+      @media (max-width: 900px) {
+        .stats-inner {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 600px) {
+        .stats-inner {
+          grid-template-columns: 1fr;
+        }
+        .survey-form {
+          padding: 24px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- NAV -->
+    <nav>
+      <a href="#" class="logo">
+        <div class="logo-badge">S</div>
+        <span class="logo-text">Sacha<span>Pay</span></span>
+      </a>
+      <a href="#waitlist" class="nav-btn">Join Waitlist</a>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-inner">
+        <div class="hero-badge">🇳🇬 Built for Nigerian Businesses</div>
+        <h1>
+          Run payroll in 2 minutes<br /><em
+            >Leave a financial record that lasts a lifetime.</em
+          >
+        </h1>
+        <p>
+          Stop entering account numbers one by one. SachaPay automates bulk
+          salary payments and gives every worker a verified Financial Passport —
+          proof of income they own for life.
+        </p>
+        <div class="hero-btns">
+          <a href="#survey" class="btn-primary">Take the 2-min Survey →</a>
+          <a href="#waitlist" class="btn-outline">Join the Waitlist</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM STRIP -->
+    <div class="problem-strip">
+      <p>
+        <strong>39M+</strong> Nigerian SMEs still paying workers manually
+        &nbsp;•&nbsp; <strong>93%</strong> of workers have no verifiable income
+        record &nbsp;•&nbsp; <strong>51%</strong> use spreadsheets for payroll
+      </p>
+    </div>
+
+    <!-- STATS -->
+    <section class="stats">
+      <div class="stats-inner">
+        <div class="stat-card">
+          <div class="stat-num">39M+</div>
+          <div class="stat-label">
+            Nigerian SMEs paying workers manually every month
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">93%</div>
+          <div class="stat-label">
+            of Nigerian workers have no verifiable income record
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">2 min</div>
+          <div class="stat-label">
+            to register your organisation and run your first payroll
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">256-bit</div>
+          <div class="stat-label">
+            bank-grade encryption on every payment — your funds and data are
+            always protected
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHO IS IT FOR -->
+    <section class="who-section">
+      <div class="who-inner">
+        <h2>Who Is SachaPay For?</h2>
+        <p>Any organisation that pays people regularly — formal or informal</p>
+        <div class="who-grid">
+          <div class="who-card">
+            <div class="who-icon">🏫</div>
+            <div class="who-name">Schools</div>
+          </div>
+          <div class="who-card">
+            <div class="who-icon">⛪</div>
+            <div class="who-name">Churches & NGOs</div>
+          </div>
+          <div class="who-card">
+            <div class="who-icon">🌾</div>
+            <div class="who-name">Farms</div>
+          </div>
+          <div class="who-card">
+            <div class="who-icon">🚚</div>
+            <div class="who-name">Logistics</div>
+          </div>
+          <div class="who-card">
+            <div class="who-icon">💇</div>
+            <div class="who-name">Salons & Shops</div>
+          </div>
+          <div class="who-card">
+            <div class="who-icon">💻</div>
+            <div class="who-name">Tech Companies</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SURVEY -->
+    <section class="survey-section" id="survey">
+      <div class="survey-inner">
+        <div class="section-tag">2-Minute Survey</div>
+        <h2>Help us build the right product for you</h2>
+        <p>
+          We are actively validating SachaPay with real Nigerian business
+          owners. Your honest answers shape what we build. Takes 2 minutes — no
+          email required unless you want early access.
+        </p>
+
+        <div class="survey-form">
+          <div class="step-indicator">
+            <div class="step-dot active" id="dot-1"></div>
+            <div class="step-dot" id="dot-2"></div>
+            <div class="step-dot" id="dot-3"></div>
+            <div class="step-dot" id="dot-4"></div>
+            <div class="step-dot" id="dot-5"></div>
+            <div class="step-dot" id="dot-6"></div>
+          </div>
+
+          <!-- STEP 1 -->
+          <div class="form-step active" id="step-1">
+            <div class="q-label">Question 1 of 6</div>
+            <div class="q-text">
+              What type of organisation do you run or manage?
+            </div>
+            <div class="options">
+              <label class="option"
+                ><input type="radio" name="q1" value="school" />
+                <div class="option-circle"></div>
+                School or educational institution</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="church" />
+                <div class="option-circle"></div>
+                Church, mosque, or religious organisation</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="farm" />
+                <div class="option-circle"></div>
+                Farm or agricultural business</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="logistics" />
+                <div class="option-circle"></div>
+                Logistics or transport</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="shop" />
+                <div class="option-circle"></div>
+                Shop, salon, or retail business</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="ngo" />
+                <div class="option-circle"></div>
+                NGO or community organisation</label
+              >
+              <label class="option"
+                ><input type="radio" name="q1" value="other" />
+                <div class="option-circle"></div>
+                Other</label
+              >
+            </div>
+            <div class="form-nav">
+              <span class="step-count">1 of 6</span>
+              <button
+                class="btn-next"
+                onclick="nextStep(1)"
+                id="next-1"
+                disabled
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 2 -->
+          <div class="form-step" id="step-2">
+            <div class="q-label">Question 2 of 6</div>
+            <div class="q-text">
+              How many people do you currently pay salaries or stipends to?
+            </div>
+            <div class="options">
+              <label class="option"
+                ><input type="radio" name="q2" value="1-5" />
+                <div class="option-circle"></div>
+                1 to 5 people</label
+              >
+              <label class="option"
+                ><input type="radio" name="q2" value="6-20" />
+                <div class="option-circle"></div>
+                6 to 20 people</label
+              >
+              <label class="option"
+                ><input type="radio" name="q2" value="21-50" />
+                <div class="option-circle"></div>
+                21 to 50 people</label
+              >
+              <label class="option"
+                ><input type="radio" name="q2" value="50+" />
+                <div class="option-circle"></div>
+                More than 50 people</label
+              >
+            </div>
+            <div class="form-nav">
+              <button class="btn-back" onclick="prevStep(2)">← Back</button>
+              <span class="step-count">2 of 6</span>
+              <button
+                class="btn-next"
+                onclick="nextStep(2)"
+                id="next-2"
+                disabled
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 3 -->
+          <div class="form-step" id="step-3">
+            <div class="q-label">Question 3 of 6</div>
+            <div class="q-text">
+              How do you currently pay your workers each month?
+            </div>
+            <div class="options">
+              <label class="option"
+                ><input type="radio" name="q3" value="bank-manual" />
+                <div class="option-circle"></div>
+                Bank transfer — I enter each account number manually</label
+              >
+              <label class="option"
+                ><input type="radio" name="q3" value="cash" />
+                <div class="option-circle"></div>
+                Cash payments</label
+              >
+              <label class="option"
+                ><input type="radio" name="q3" value="opay" />
+                <div class="option-circle"></div>
+                Opay, Moniepoint, or similar app</label
+              >
+              <label class="option"
+                ><input type="radio" name="q3" value="platform" />
+                <div class="option-circle"></div>
+                Already using a payroll platform</label
+              >
+            </div>
+            <div class="form-nav">
+              <button class="btn-back" onclick="prevStep(3)">← Back</button>
+              <span class="step-count">3 of 6</span>
+              <button
+                class="btn-next"
+                onclick="nextStep(3)"
+                id="next-3"
+                disabled
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 4 -->
+          <div class="form-step" id="step-4">
+            <div class="q-label">Question 4 of 6</div>
+            <div class="q-text">
+              Have you or your workers ever experienced a delayed or forgotten
+              payment?
+            </div>
+            <div class="options">
+              <label class="option"
+                ><input type="radio" name="q4" value="many" />
+                <div class="option-circle"></div>
+                Yes — it has happened more than once</label
+              >
+              <label class="option"
+                ><input type="radio" name="q4" value="once" />
+                <div class="option-circle"></div>
+                Yes — it happened once</label
+              >
+              <label class="option"
+                ><input type="radio" name="q4" value="never" />
+                <div class="option-circle"></div>
+                No, it has never happened</label
+              >
+            </div>
+            <div class="form-nav">
+              <button class="btn-back" onclick="prevStep(4)">← Back</button>
+              <span class="step-count">4 of 6</span>
+              <button
+                class="btn-next"
+                onclick="nextStep(4)"
+                id="next-4"
+                disabled
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 5 -->
+          <div class="form-step" id="step-5">
+            <div class="q-label">Question 5 of 6</div>
+            <div class="q-text">
+              One click to pay your entire team. Every worker gets a verified
+              income certificate, automatically. What monthly fee feels fair for
+              that?
+            </div>
+            <div class="options">
+              <label class="option"
+                ><input type="radio" name="q5" value="nothing" />
+                <div class="option-circle"></div>
+                Nothing — I would not pay</label
+              >
+              <label class="option"
+                ><input type="radio" name="q5" value="500-1000" />
+                <div class="option-circle"></div>
+                ₦500 to ₦1,000 per month</label
+              >
+              <label class="option"
+                ><input type="radio" name="q5" value="1000-3000" />
+                <div class="option-circle"></div>
+                ₦1,000 to ₦3,000 per month</label
+              >
+              <label class="option"
+                ><input type="radio" name="q5" value="3000-5000" />
+                <div class="option-circle"></div>
+                ₦3,000 to ₦5,000 per month</label
+              >
+              <label class="option"
+                ><input type="radio" name="q5" value="5000+" />
+                <div class="option-circle"></div>
+                More than ₦5,000 per month</label
+              >
+            </div>
+            <div class="form-nav">
+              <button class="btn-back" onclick="prevStep(5)">← Back</button>
+              <span class="step-count">5 of 6</span>
+              <button
+                class="btn-next"
+                onclick="nextStep(5)"
+                id="next-5"
+                disabled
+              >
+                Next →
+              </button>
+            </div>
+          </div>
+
+          <!-- STEP 6 — WAITLIST -->
+          <div class="form-step" id="step-6">
+            <div class="q-label">Question 6 of 6</div>
+            <div class="q-text">
+              Would you like early access to SachaPay before full launch?
+            </div>
+            <div class="options" style="margin-bottom: 20px">
+              <label class="option" id="opt-yes" onclick="showWaitlistFields()"
+                ><input type="radio" name="q6" value="yes" />
+                <div class="option-circle"></div>
+                Yes — add me to the waitlist</label
+              >
+              <label class="option" id="opt-no" onclick="hideWaitlistFields()"
+                ><input type="radio" name="q6" value="no" />
+                <div class="option-circle"></div>
+                No — just filling the survey</label
+              >
+            </div>
+
+            <div
+              id="waitlist-fields"
+              class="waitlist-fields"
+              style="display: none; margin-bottom: 20px"
+            >
+              <div>
+                <label class="field-label">Full Name *</label>
+                <input
+                  type="text"
+                  class="field-input"
+                  id="wl-name"
+                  placeholder="Your full name"
+                />
+              </div>
+              <div>
+                <label class="field-label">WhatsApp / Phone Number *</label>
+                <input
+                  type="tel"
+                  class="field-input"
+                  id="wl-phone"
+                  placeholder="08012345678"
+                />
+              </div>
+              <div>
+                <label class="field-label">Email Address</label>
+                <input
+                  type="email"
+                  class="field-input"
+                  id="wl-email"
+                  placeholder="you@email.com"
+                />
+              </div>
+            </div>
+
+            <div class="form-nav">
+              <button class="btn-back" onclick="prevStep(6)">← Back</button>
+              <span class="step-count">6 of 6</span>
+              <button
+                class="btn-next"
+                onclick="submitSurvey()"
+                id="next-6"
+                disabled
+              >
+                Submit ✓
+              </button>
+            </div>
+          </div>
+
+          <!-- SUCCESS -->
+          <div class="form-step" id="step-success">
+            <div class="success-state">
+              <div class="success-icon">🎉</div>
+              <h3>Thank you so much!</h3>
+              <p>
+                Your response has been recorded. It will directly shape how
+                SachaPay is built.<br /><br />
+                If you joined the waitlist, you will be among the first to get
+                access when we launch fully.
+              </p>
+              <br />
+              <p style="font-size: 13px; color: var(--gold); font-weight: 600">
+                — Oluwakemi, Founder of SachaPay
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- WAITLIST SECTION -->
+    <section class="waitlist-section" id="waitlist">
+      <h2>Get Early Access to SachaPay</h2>
+      <p>
+        Join the waitlist and be first to know when we launch fully. No spam —
+        just one message when we are ready for you.
+      </p>
+      <div class="waitlist-form-inline">
+        <input
+          type="tel"
+          class="waitlist-input"
+          placeholder="Your WhatsApp number"
+        />
+        <button class="btn-waitlist" onclick="joinWaitlist()">
+          Join Waitlist →
+        </button>
+      </div>
+      <p
+        style="
+          font-size: 12px;
+          margin-top: 16px;
+          color: rgba(248, 245, 237, 0.35);
+        "
+      >
+        Already 0 people on the waitlist. Be one of the first.
+      </p>
+    </section>
+
+    <!-- QUOTE -->
+    <section class="quote-section">
+      <blockquote>
+        "The worker who can prove their income will always get the loan."
+      </blockquote>
+      <cite>— The SachaPay Promise</cite>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+      <p>
+        © 2026 SachaPay Technologies &nbsp;•&nbsp; Built for Nigerian SMEs
+        &nbsp;•&nbsp; sasha-pay.vercel.app
+      </p>
+    </footer>
+
+    <script>
+      let currentStep = 1;
+      const totalSteps = 6;
+      const API = "https://sachapay-survey.onrender.com"; // replace with your Render URL
+
+      // Option selection
+      document.querySelectorAll(".option").forEach((option) => {
+        option.addEventListener("click", function () {
+          const name = this.querySelector("input").name;
+          document.querySelectorAll(`input[name="${name}"]`).forEach((inp) => {
+            inp.closest(".option").classList.remove("selected");
+          });
+          this.classList.add("selected");
+          this.querySelector("input").checked = true;
+
+          // Enable next button
+          const stepNum = currentStep;
+          const nextBtn = document.getElementById(`next-${stepNum}`);
+          if (nextBtn) nextBtn.disabled = false;
+
+          // Step 6 special
+          if (name === "q6") {
+            document.getElementById("next-6").disabled = false;
+          }
+        });
+      });
+
+      function nextStep(from) {
+        document.getElementById(`step-${from}`).classList.remove("active");
+        document.getElementById(`dot-${from}`).classList.remove("active");
+        document.getElementById(`dot-${from}`).classList.add("done");
+        currentStep = from + 1;
+        document.getElementById(`step-${currentStep}`).classList.add("active");
+        document.getElementById(`dot-${currentStep}`).classList.add("active");
+      }
+
+      function prevStep(from) {
+        document.getElementById(`step-${from}`).classList.remove("active");
+        document.getElementById(`dot-${from}`).classList.remove("active");
+        currentStep = from - 1;
+        document.getElementById(`step-${currentStep}`).classList.add("active");
+        document.getElementById(`dot-${currentStep}`).classList.remove("done");
+        document.getElementById(`dot-${currentStep}`).classList.add("active");
+      }
+
+      function showWaitlistFields() {
+        document.getElementById("waitlist-fields").style.display = "flex";
+        document.getElementById("next-6").disabled = false;
+      }
+
+      function hideWaitlistFields() {
+        document.getElementById("waitlist-fields").style.display = "none";
+        document.getElementById("next-6").disabled = false;
+      }
+
+      async function submitSurvey() {
+        const data = {
+          orgType: document.querySelector('input[name="q1"]:checked')?.value,
+          teamSize: document.querySelector('input[name="q2"]:checked')?.value,
+          paymentMethod: document.querySelector('input[name="q3"]:checked')
+            ?.value,
+          delayExperience: document.querySelector('input[name="q4"]:checked')
+            ?.value,
+          willingToPay: document.querySelector('input[name="q5"]:checked')
+            ?.value,
+          wantsWaitlist:
+            document.querySelector('input[name="q6"]:checked')?.value === "yes",
+          name: document.getElementById("wl-name")?.value,
+          phone: document.getElementById("wl-phone")?.value,
+          email: document.getElementById("wl-email")?.value,
+        };
+
+        try {
+          await fetch(`${API}/api/survey/submit`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(data),
+          });
+        } catch (err) {
+          console.error("Submit error:", err);
+        }
+
+        // Show success screen regardless
+        document.getElementById("step-6").classList.remove("active");
+        document.getElementById("dot-6").classList.remove("active");
+        document.getElementById("dot-6").classList.add("done");
+        document.getElementById("step-success").classList.add("active");
+      }
+
+      function joinWaitlist() {
+        const input = document.querySelector(".waitlist-input");
+        const btn = document.querySelector(".btn-waitlist");
+        if (input.value.length > 7) {
+          btn.disabled = true;
+          btn.textContent = "Joining...";
+          fetch(`${API}/api/survey/waitlist`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ phone: input.value }),
+          })
+            .then((res) => {
+              return res.json();
+            })
+            .then((data) => {
+              if (!data.success)
+                throw new Error(data.message || "Something went wrong");
+              input.value = "";
+              input.placeholder = "✓ You are on the list!";
+              input.style.borderColor = "#059669";
+              input.style.color = "#059669";
+              btn.textContent = "Joined ✓";
+            })
+            .catch((err) => {
+              console.error("Join error:", err);
+              input.value = "";
+              input.placeholder = `✗ ${err.message}`;
+              input.style.borderColor = "red";
+              input.style.color = "red";
+              btn.disabled = false;
+              btn.textContent = "Join Waitlist →";
+            });
+        }
+      }
+    </script>
+  </body>
 </html>
