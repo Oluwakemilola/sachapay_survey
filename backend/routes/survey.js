@@ -5,6 +5,7 @@ import {
   getWaitlist,
   exportWaitlist,
   submitWaitlist,
+  exportAllResponses,
 } from "../controller/survey.js";
 
 const surveyRouter = express.Router();
@@ -16,5 +17,6 @@ surveyRouter.get("/responses", getSurveyResponses);
 surveyRouter.get("/waitlist", getWaitlist);
 surveyRouter.post("/waitlist", submitWaitlist);
 surveyRouter.get("/waitlist/export", exportWaitlist);
+surveyRouter.get("/export",          exportAllResponses); 
 
 export default surveyRouter;
